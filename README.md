@@ -125,8 +125,8 @@ CentrixlinkVideoADListener eventListener =  new CentrixlinkVideoADListener() {
             //key:"error", value:AD_PlayError
             /* AD_PlayError
                 100 广告的播放间隔时间不满足条件
-                101	本地没有可播放广告
-                105	当前正在播放其它广告
+                101 地没有可播放广告
+                105 当前正在播放其它广告
                 106 处于静默状态
                 107 本地广告资源不可用
                 108 当前用户播放超限
@@ -292,5 +292,3 @@ protected void onDestroy() {
 }
 
 ```
-
-
