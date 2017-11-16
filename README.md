@@ -41,19 +41,7 @@
         <activity android:name="com.centrixlink.SDK.FullScreenADActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:process=":adprocess"
             tools:ignore="InnerclassSeparator" />
-
-        <activity android:name="com.centrixlink.SDK.ResizedVideoADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
-            android:hardwareAccelerated="true"
-            android:process=":adprocess"
-            tools:ignore="InnerclassSeparator" />
-      <!-- 广告 service -->
-        <service
-            android:name="com.centrixlink.SDK.service.CentrixlinkService"
-            android:exported="false" />
 
 
     </application>
@@ -115,8 +103,8 @@ CentrixlinkVideoADListener eventListener =  new CentrixlinkVideoADListener() {
             }
 
             @Override
-            public void centrixLinkHasPreloadAD(boolean isPreloadFinished) {
-                //本地是否有预加载的广告 false表示没有，true表示有
+            public void centrixLinkAdPlayability(boolean isPreloadFinished) {
+                //是否可以播放广告
             }
 
             @Override
@@ -163,11 +151,16 @@ final Centrixlink centrixlink =   Centrixlink.sharedInstance();
 
 centrixlink.playAD(activity);
 
-/**如果你需要配置Server to Server 的透传参数，可以使用AdConfig 进行透传配置**/
+/**如果你需要配置广告显示的方向,声音开闭,点击下载后是否自动关闭广告界面可以使用AdConfig 对应参数进行配置
+*  并且如果你需要进行Server to Server 的透传并配置透传参数，你可以使用AdConfig提供的默
+*  认参数，或者使用Bundle来配置你的自定义参数**/
 AdConfig config = new AdConfig();
+//
+config.setCentrixlinkOrientations(AdConfig.ORIENTATIONS_DEFAULT);//设置你的广告的播放方向：AdConfig.ORIENTATIONS_LANDSCAPE 横向，AdConfig.ORIENTATIONS_PORTRAIT 竖向，AdConfig.ORIENTATIONS_DEFAULT会默认跟随你在后台设置的方向
+config.setCentrixlinkIECAutoClose(false);//设置广告跳转按钮被点击后是否会自动关闭广告界面
 config.setOptionKeyExtra1("****");//你可以使用保留的八个自定义参数 optionKeyExtra1-optionKeyExtra8来配置你的自定义参数
 Bundle bundle = new Bundle();//或者你可以使用bundle 通过 key value的形式传入你的自定义参数,我们支持所有类型参数和list类型的参数
- bundle.putString("Your parameter name","Your parameter value");
+bundle.putString("Your parameter name","Your parameter value");
 bundle.putInt("Your parameter name1",1);
 ArrayList<String> list = new ArrayList<>();
 list.add("1");
@@ -183,74 +176,8 @@ centrixlink.playAD(mActivity,config);
 final Centrixlink centrixlink =   Centrixlink.sharedInstance();
 /*
  * 检查当前是否可以播放视频广告
- * 功能等同于预加载状态centrixLinkHasPreloadAD回调方法
 */
-centrixlink.hasPreloadAD();
-```
-
-
-##### 4.2.4 设置视频广告显示方向是否跟随应用方向
-
-```Java
-/**
- 设置是否跟随应用方向
-
- @param boolead enable 默认值为true;
- */
- centrixlink.setEnableFollowAppOrientation(enable);
-
-```
-#### 4.3 开屏图片广告及监听设置
-
-``` Java
-final Centrixlink centrixlink =   Centrixlink.sharedInstance();
-
-centrixlink.playSplashAD(this, new SplashADEventListener() {
-
-            @Override
-            public void centrixlinkSplashADDidShow(Map map) {
-            //开屏图片广告已经显示
-            //key:"ADID", value:String
-
-            }
-
-            @Override
-            public void centrixlinkSplashADAction(Map map) {
-            //开屏图片广告点击事件
-            //key:"ADID", value:String
-
-
-            }
-
-            @Override
-            public void centrixlinkSplashADShowFail(AD_PlayError error) {
-            //开屏图片广告显示失败
-            /* AD_PlayError
-            201    本地无缓存
-	         */
-            }
-
-            @Override
-            public void centrixlinkSplashADClosed(Map map) {
-            //开屏图片广告关闭
-            //key:"ADID", value:String
-            //key:"isClick", value: boolean
-            //key:"isSkip", value: boolean
-            //key:"playFinished", value: boolean
-
-
-            }
-
-
-            @Override
-            public void centrixlinkSplashADSkip(Map map) {
-            //开屏图片广告跳过
-            //key:"ADID", value:String
-
-            }
-
-        });
-
+centrixlink.isAdPlayable();
 ```
 
 #### 4.4 Activty生命周期与SDK关联处理
