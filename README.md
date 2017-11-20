@@ -148,7 +148,8 @@ final Centrixlink centrixlink =   Centrixlink.sharedInstance();
 /**
  @param Activity activity 当前activity
  */
-
+ 
+/**你可以使用之前的接口进行播放:**/
 centrixlink.playAD(activity);
 
 /**如果你需要配置广告显示的方向,声音开闭,点击下载后是否自动关闭广告界面可以使用AdConfig 对应参数进行配置
